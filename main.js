@@ -7,10 +7,8 @@ window.onload = function () {
 	const bookYear   = document.querySelector('.book-year');
 	const bookPages  = document.querySelector('.book-pages');
 	const bookAdd    = document.querySelector('.btn-primary');
+	const bookUpdate = document.querySelector('.btn-success');
 	const bookList   = document.querySelector('.list-group');
-	
-	// Object with information about books from localStorage
-	// let booksData = {};
 
 	// Array of books from the localStorage if it is not empty
 	let booksArray = localStorage.getItem('books') ? JSON.parse(localStorage.getItem('books')) : [];
@@ -35,7 +33,6 @@ window.onload = function () {
 				if (bookInfo.hasOwnProperty(param)) {
 					// Wrap every book data in span
 					let bookParam       = document.createElement('span');
-
 					bookParam.className = `${param}`;
 					bookParam.innerHTML = `${bookInfo[param]}`;
 					li.appendChild(bookParam);
@@ -109,6 +106,17 @@ window.onload = function () {
 		return bookIndex;
 	}
 
+	// Get book info from form
+	function CollectBookInfo() {
+		const book = {
+			author : `${bookAuthor.value} `,
+			title  : `${bookTitle.value} `,
+			year   : `${bookYear.value}`,
+			pages  : `${bookPages.value}`
+		};
+		return book;
+	}
+
 	// Fill form for editing with data from the list 
 	// id - id of the list-item
 	// index - index of the book in booksArray
@@ -128,7 +136,7 @@ window.onload = function () {
 
 	function UpdateLi(bookInfo, id) {
 		const li = document.getElementById(id);
-		
+
 		for (const key in bookInfo) {
 			if (bookInfo.hasOwnProperty(key)) {
 				const span = li.querySelector(`span.${key}`);
@@ -143,52 +151,52 @@ window.onload = function () {
 	function RemoveBook(id) {
 		const index = FindBook(id);
 
-		bookAdd.classList.remove('btn-success');
+		bookForm.reset();
 		booksArray.splice(index, 1);
 		localStorage.setItem('books', JSON.stringify(booksArray));
 		document.getElementById(id).remove();
-		bookForm.reset();
 	}
 
 	// Edit book info
 	function EditBook(id) {
+		bookForm.reset();
 		const index = FindBook(id);
 		FillForm(index);
 
-		bookAdd.classList.add('btn-success');
-		bookForm.querySelector('.btn-success').addEventListener('click', function () {
+		bookAdd.classList.add('hidden');
+		bookUpdate.classList.remove('hidden');
+
+		bookUpdate.addEventListener('click', function () {
 			const book        = CollectBookInfo();
-			book.id           = booksArray[index].id;
 			
+			book.id           = booksArray[index].id;
 			booksArray[index] = book;
+
 			localStorage.setItem('books', JSON.stringify(booksArray));
 
 			UpdateLi(book, id);
-
+			
+			bookUpdate.classList.add('hidden');
+			bookAdd.classList.remove('hidden');
+			
 			bookForm.reset();
 		});
 
 	}
 
-	// Get book info from form
-	function CollectBookInfo() {
-		const book = {
-			author : `${bookAuthor.value} `,
-			title  : `${bookTitle.value} `,
-			year   : `${bookYear.value}`,
-			pages  : `${bookPages.value}`
-		};
-		return book;
-	}
-
 	bookForm.addEventListener('submit', function (e) {
 		e.preventDefault();
 
-		if (bookAdd.classList.contains('btn-success')) {
-			return;
-		}
-
 		const book = CollectBookInfo();
+
+		for (const key in book) {
+			if (book.hasOwnProperty(key)) {
+				const info = book[key];
+				if ((info === '') || (info === ' ')) {
+					return;
+				}
+			}
+		}
 
 		// Settin new book id
 		// no books
@@ -216,16 +224,6 @@ window.onload = function () {
 		bookForm.reset();
 
 	});
-
-	// Display stored books
-	// if (localStorage.getItem('books')) {
-	// 	booksData = JSON.parse(localStorage.getItem('books'));
-	// 	booksData.forEach(book => {
-	// 		addBook(book);
-	// 		console.log(book);
-	// 	});
-	// }
-	// console.log(booksData);
 
 	// Display stored books
 	if (localStorage.getItem('books')) {
