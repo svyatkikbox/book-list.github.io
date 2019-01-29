@@ -7,8 +7,8 @@ window.onload = function () {
 	const bookYear   = document.querySelector('.book-year');
 	const bookPages  = document.querySelector('.book-pages');
 	const bookAdd    = document.querySelector('.btn-primary');
-	const bookUpdate = document.querySelector('.btn-success');
 	const bookList   = document.querySelector('.list-group');
+	let current    = document.getElementById('current').value;
 
 	// Array of books from the localStorage if it is not empty
 	let booksArray = localStorage.getItem('books') ? JSON.parse(localStorage.getItem('books')) : [];
@@ -159,44 +159,67 @@ window.onload = function () {
 
 	// Edit book info
 	function EditBook(id) {
-		bookForm.reset();
 		const index = FindBook(id);
+		
+		bookForm.reset();
 		FillForm(index);
+		current = id;
+		bookAdd.classList.add('btn-success');
 
-		bookAdd.classList.add('hidden');
-		bookUpdate.classList.remove('hidden');
+		console.log('current book id');
+		console.log(current);
 
-		bookUpdate.addEventListener('click', function () {
-			const book        = CollectBookInfo();
-			
-			book.id           = booksArray[index].id;
-			booksArray[index] = book;
+		console.log('current info of the book in BooksArray');
+		console.log(booksArray[index]);
+		
+	}
 
-			localStorage.setItem('books', JSON.stringify(booksArray));
+	function SaveChanges(id) {
+		console.log('функция получила id текущей книги');
+		console.log(id);
+		
+		const index = FindBook(id);
+		
+		console.log('index of the saved book in array');
+		console.log(index);
 
-			UpdateLi(book, id);
-			
-			bookUpdate.classList.add('hidden');
-			bookAdd.classList.remove('hidden');
-			
-			bookForm.reset();
-		});
+		const newBookInfo = CollectBookInfo();
+		newBookInfo.id = id;
 
+		console.log('newBookInfo');
+		console.log(newBookInfo);
+		console.log('booksArray[index]');
+		console.log(booksArray[index]);
+
+		console.log('changed li in VIEW');
+		UpdateLi(newBookInfo, id);
+
+		console.log('editedli');
+		console.log(document.getElementById(id));
+
+		booksArray[index] = newBookInfo;
+
+		// Save changes
+		localStorage.setItem('books', JSON.stringify(booksArray));
+		bookForm.reset();
+		bookAdd.classList.remove('btn-success');
+
+		console.log('CHANGES');
+		console.log(JSON.parse(localStorage.books));
 	}
 
 	bookForm.addEventListener('submit', function (e) {
 		e.preventDefault();
 
-		const book = CollectBookInfo();
+		// If the editBtn was pressed
+		// New book info would be save
+		if (bookAdd.classList.contains('btn-success')) {
+			SaveChanges(current);
 
-		for (const key in book) {
-			if (book.hasOwnProperty(key)) {
-				const info = book[key];
-				if ((info === '') || (info === ' ')) {
-					return;
-				}
-			}
+			return;
 		}
+
+		const book = CollectBookInfo();
 
 		// Settin new book id
 		// no books

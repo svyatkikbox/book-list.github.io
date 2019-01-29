@@ -17,23 +17,23 @@
 				<form class="form px-2 py-2">
 					<div class="form-row my-3">
 						<div class="col pl-0">
-							<input type="text" name="author"  class="form-control book-author" placeholder="Автор">
+							<input type="text" name="author" required class="form-control book-author" placeholder="Автор">
 						</div>
 						<div class="col pl-0">
-							<input type="text" name="title"  class="form-control book-title" placeholder="Название книги">
+							<input type="text" name="title" required class="form-control book-title" placeholder="Название книги">
 						</div>
 					</div>
 					<div class="form-row my-3">
 						<div class="col pl-0">
-							<input type="text" name="year"  class="form-control book-year" placeholder="Год издания">
+							<input type="text" name="year" required class="form-control book-year" placeholder="Год издания">
 						</div>
 						<div class="col pl-0">
-							<input type="text" name="pages"  class="form-control book-pages" placeholder="Кол-во страниц">
+							<input type="text" name="pages" required class="form-control book-pages" placeholder="Кол-во страниц">
 						</div>
 					</div>
 					<div class="form-row">
-						<button class="btn btn-primary btn-block">Сохранить</button>
-						<button class="btn btn-block btn-success hidden">Изменить</button>
+						<button class="btn btn-block btn-primary">Сохранить</button>
+						<input type="text" name="current" id="current" class="d-none">
 					</div>
 				</form>
 			</div>
