@@ -165,38 +165,14 @@ window.onload = function () {
 		FillForm(index);
 		current = id;
 		bookAdd.classList.add('btn-success');
-
-		console.log('current book id');
-		console.log(current);
-
-		console.log('current info of the book in BooksArray');
-		console.log(booksArray[index]);
-		
 	}
 
 	function SaveChanges(id) {
-		console.log('функция получила id текущей книги');
-		console.log(id);
-		
 		const index = FindBook(id);
-		
-		console.log('index of the saved book in array');
-		console.log(index);
-
 		const newBookInfo = CollectBookInfo();
+		
 		newBookInfo.id = id;
-
-		console.log('newBookInfo');
-		console.log(newBookInfo);
-		console.log('booksArray[index]');
-		console.log(booksArray[index]);
-
-		console.log('changed li in VIEW');
 		UpdateLi(newBookInfo, id);
-
-		console.log('editedli');
-		console.log(document.getElementById(id));
-
 		booksArray[index] = newBookInfo;
 
 		// Save changes
@@ -204,8 +180,6 @@ window.onload = function () {
 		bookForm.reset();
 		bookAdd.classList.remove('btn-success');
 
-		console.log('CHANGES');
-		console.log(JSON.parse(localStorage.books));
 	}
 
 	bookForm.addEventListener('submit', function (e) {
@@ -215,7 +189,6 @@ window.onload = function () {
 		// New book info would be save
 		if (bookAdd.classList.contains('btn-success')) {
 			SaveChanges(current);
-
 			return;
 		}
 
